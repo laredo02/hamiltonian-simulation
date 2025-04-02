@@ -12,7 +12,7 @@ We consider a Hamiltonian acting on $n$ qubits:
 \end{equation}
 where $s_i$ are Pauli matrices ($X, Y, Z$), and $\alpha$ is a scalar. Our goal is to implement the time evolution operator efficiently:
 \begin{equation}
-  e^{-itH} = e^{-it\alpha (s_1 \otimes s_2 \otimes \dots \otimes s_n)}.
+  e^{-itH} = e^{-it\alpha (s_1 \otimes s_2 \otimes \dots \otimes s_n)}
 \end{equation}
 
 \section{The Challenge}
@@ -46,15 +46,6 @@ This follows from the definition of the matrix exponential.
 \end{proof}
 
 \section{Diagonalizing $H$}
-Each Pauli matrix $s_i$ can be diagonalized by a single-qubit unitary $U_i$:
-\section{Diagonalization of Pauli Terms}
-
-
-\section{Single-Qubit Pauli Matrix Diagonalization}
-
-\section{Pauli Matrices}
-
-The Pauli matrices are fundamental operators in quantum mechanics:
 
 \begin{equation}
 X = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \quad
@@ -76,7 +67,9 @@ Z = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}
     \end{equation}
     The unitary $U_Y$ transforms $Y$ to diagonal $Z$ form.
   \end{itemize}
- 
+
+
+  \section{Putting it all together}
 
 Applying these transformations to all qubits, we rewrite the evolution operator as:
 \begin{equation}
