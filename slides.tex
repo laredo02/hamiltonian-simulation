@@ -19,7 +19,7 @@
 \title{Hamiltonian Simulation}
 \subtitle{Quantum Computing}
 
-\author{Álvaro Sánchez-Paniagua, Ana Vargas, Gonzalo, Íñigo, Miguel Laredo}
+\author{Álvaro Sánchez-Paniagua, Ana Vargas, Gonzalo Martínez de Sola, Iñigo Iriondo, Miguel Laredo}
 
 \institute
 {
@@ -464,7 +464,7 @@ Each term couples only a qubit and its nearest neighbor (both horizontally and v
 
 
 \begin{frame}{Implementation via Quantum Circuits}
-  \begin{block}{The problem reduces to implementing the following}
+  \begin{block}{Since $e^{M \otimes I} = e^{M} \otimes I$ The problem reduces to implementing the following}
   \begin{equation*}
     e^{-i \alpha t Z \otimes Z \otimes \cdots \otimes Z}.
   \end{equation*}
@@ -640,7 +640,93 @@ e^{-iA} e^{-iB}
 % Gonzalo
 %%%%%%%%%%%%%%%%%%%
 
+\begin{frame}{Hamiltonian Simulation Approximation}
+We show how approximating a product of the form \(\prod_{j} e^{-iH_j t}\) allows a sum of the form \(e^{-i(\sum_{j} H_j )t}\) to be approximated.\newline\pause
 
+We can now apply \textbf{Lemma 2} formula multiple times, for any Hermitian matrices \( H_1, \dots, H_m \) satisfying \( \|H_j\| \leq \delta \leq 1 \) for all \( j \) as follows,\pause
+\begin{align*}
+e^{-iH_1} e^{-iH_2} \dots e^{-iH_m} &= 
+\left( e^{-i(H_1+H_2)} + O(\delta^2) \right) e^{-iH_3} \dots e^{-iH_m} \\  
+&= \left( e^{-i(H_1+H_2+H_3)} + O((2\delta)^2) \right) e^{-iH_4} \dots e^{-iH_m} + O(\delta^2) \\  
+&= e^{-i(H_1+\dots+H_m)} + O(\delta^2) + O((2\delta)^2) + \dots + O(((m-1)\delta)^2) \\  
+&= e^{-i(H_1+\dots+H_m)} + O(m^3\delta^2)
+\end{align*}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Hamiltonian Simulation Approximation}
+
+    Write \( H = \sum_{j=1}^{m} H_j \), where \( \|H_j\| \leq \Delta \).  
+    Applying this claim to matrices \( H_j t/p \) for any \( t \) and \( p \geq t \Delta \), we have: \pause
+    
+    \[
+    \left\| e^{-iH_1 t/p} e^{-iH_2 t/p} \dots e^{-iH_m t/p} - e^{-i(H_1+\dots+H_m)t/p} \right\| = O \left( m^3 \left( \frac{t\Delta}{p} \right)^2 \right).
+    \]\pause
+
+    As an example, $H_j$ could be a weighted Pauli matrix as in the previous section, where the constraint corresponds to $|\alpha_j| \leq \Delta$.
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Universal Constant and Approximation Bound}
+
+    There exists a universal constant \( C \) such that for \( p \geq Cm^3 (t \Delta)^2 / \epsilon \): \pause
+
+    \[
+    \left\| e^{-iH_1 t/p} e^{-iH_2 t/p} \dots e^{-iH_m t/p} - e^{-i(H_1+\dots+H_m)t/p} \right\| \leq \frac{\epsilon}{p}.
+    \]\pause
+
+    By \textbf{Lemma 1}, for any such \( p \),\pause
+
+    \[
+    \left\| \left( e^{-iH_1 t/p} e^{-iH_2 t/p} \dots e^{-iH_m t/p} \right)^p - e^{-i(H_1+\dots+H_m)t} \right\| \leq \epsilon.
+    \]\pause
+
+    By this result, we can simulate a Hamiltonian for time \textit{t} by simulating the evolution of each of this terms for time $t/p$ and concatenating each of the simulations.
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Hamiltonian Simulation Theorem}
+
+    \begin{alertblock}{Theorem}
+         Let \( H \) be a Hamiltonian written as:
+
+        \[
+        H = \sum_{S \in \{I, X, Y, Z\}^n} \alpha_S \sigma_S,
+        \]
+    
+        where at most \( m \) coefficients \( \alpha_S \) are nonzero, and \( \max_S |\alpha_S| = O(1) \).  
+        Then, for any \( t \), there exists a quantum circuit that approximates \( e^{-iHt} \) within \( \epsilon \) in time:
+    
+        \[
+        O(m^4 n t^2 / \epsilon).
+        \]
+    
+    \end{alertblock}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Computational Complexity Considerations}
+
+    It seems undesirable that simulating a Hamiltonian for time \( t \) depends on \( t \) as \( O(t^2) \).  
+    However, using more advanced techniques, this dependence can be improved to linear, up to logarithmic factors.
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Recap}
+Key points we have followed in order to showcase Hamiltonian simulation:
+    \begin{itemize}
+    
+        \item Defined a notion of simulation
+        \item Defined the circuit to simulate a Hamiltonian proportional to a Pauli matrix. $O(n)$
+        \item Extend this result to the case in which the Hamiltonian is a sum of \textit{m} weighted Pauli matrices that commute. $O(nm)$
+        \item Finally, see how to approximate the non commuting case.
+    \end{itemize}
+
+\end{frame}
 
 
 
